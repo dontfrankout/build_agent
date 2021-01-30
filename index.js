@@ -1,7 +1,7 @@
 import http from 'http';
 import crypto from 'crypto';
 import {config} from './config.js';
-//import { exec } from 'child_process';
+import { exec } from 'child_process';
  
 const SECRET = 'MY_GITHUB_WEBHOOK_SECRET';
  
