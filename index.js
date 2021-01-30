@@ -6,7 +6,7 @@ import { exec } from 'child_process';
 const SECRET = 'MY_GITHUB_WEBHOOK_SECRET';
  
 const GITHUB_REPOSITORIES_TO_DIR = {
-  'dontfrankout/xm_budget': {appDir: '/home/ec2-user/xm_budget', branchToWatch: 'main'},
+  'dontfrankout/xm_budget': {appDir: '/home/ec2-user/xm_budget', branchToWatch: 'staging'},
 };
 
 const requestListener = function (req, res) {
