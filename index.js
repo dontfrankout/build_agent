@@ -6,7 +6,7 @@ import { exec } from 'child_process';
 const SECRET = 'MY_GITHUB_WEBHOOK_SECRET';
  
 const GITHUB_REPOSITORIES_TO_DIR = {
-  'dontfrankout/xm_budget': '/home/ec2-user/xm_budget',
+  'dontfrankout/xm_budget': {appDir: '/home/ec2-user/xm_budget', branchToWatch: 'main'},
 };
 
 const requestListener = function (req, res) {
@@ -21,14 +21,18 @@ const requestListener = function (req, res) {
 
     const body = JSON.parse(chunk);
 
-    //const isMaster = body.ref === 'refs/heads/master';
-    
     const directory = GITHUB_REPOSITORIES_TO_DIR[body.repository.full_name];
 
-    if (isAllowed && directory) {
+    const hookBranch = body.ref
+
+    const isBranch = hookBranch === `refs/heads/${directory.branchToWatch}`;
+    
+    
+
+    if (isAllowed && isBranch && directory) {
       try {
         
-        exec(`cd ${directory} && touch deploy.yay && git pull && npm run build && npm run deploy`);
+        exec(`cd ${directory.appDir} && touch deploy.yay && git pull && npm run build && npm run deploy`);
       } catch (error) {
         console.log(error);
       }
