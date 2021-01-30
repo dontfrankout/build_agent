@@ -34,17 +34,23 @@ const requestListener = function (req, res) {
         
         exec(`cd ${directory.appDir} && touch deploy.yay && git pull && npm run build && npm run deploy`);
 
+        res.writeHead(500);
+        res.end("hello?");
+
       } catch (error) {
         console.log(error);
+
+        res.writeHead(500);
+        res.end("catch error?");
       }
     } else {
       console.log("isAllowed", isAllowed, "isBranch", isBranch,"directory", directory)
-
+      res.writeHead(500);
+      res.end("non match?");
 
     }
   });
-  res.writeHead(200);
-  res.end("hello?");
+
 }
  
 http
