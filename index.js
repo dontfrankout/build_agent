@@ -11,7 +11,7 @@ const GITHUB_REPOSITORIES_TO_DIR = {
 
 const requestListener = function (req, res) {
   req.on('data', chunk => {
-    console.log("in on data")
+    console.log("Processing Request")
     const signature = `sha1=${crypto
       .createHmac('sha1', SECRET)
       .update(chunk)
@@ -26,16 +26,24 @@ const requestListener = function (req, res) {
     const hookBranch = body.ref
 
     const isBranch = hookBranch === `refs/heads/${directory.branchToWatch}`;
+
+    console.log("Body:")
     
     
 
     if (isAllowed && isBranch && directory) {
       try {
+
+        console.log("Running Build Commands")
         
         exec(`cd ${directory.appDir} && touch deploy.yay && git pull && npm run build && npm run deploy`);
       } catch (error) {
         console.log(error);
       }
+    } else {
+      console.log("isAllowed", isAllowed, "isBranch", isBranch,"directory", directory)
+
+
     }
   });
   res.writeHead(200);
