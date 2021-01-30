@@ -1,6 +1,5 @@
 import http from 'http';
 import crypto from 'crypto';
-import {config} from './config.js';
 import { exec } from 'child_process';
  
 const SECRET = 'MY_GITHUB_WEBHOOK_SECRET';
@@ -26,10 +25,7 @@ const requestListener = function (req, res) {
     const hookBranch = body.ref
 
     const isBranch = hookBranch === `refs/heads/${directory.branchToWatch}`;
-
-    console.log("Body:")
-    
-    
+  
 
     if (isAllowed && isBranch && directory) {
       try {
@@ -37,6 +33,7 @@ const requestListener = function (req, res) {
         console.log("Running Build Commands")
         
         exec(`cd ${directory.appDir} && touch deploy.yay && git pull && npm run build && npm run deploy`);
+
       } catch (error) {
         console.log(error);
       }
