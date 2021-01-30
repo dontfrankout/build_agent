@@ -27,8 +27,8 @@ const requestListener = function (req, res) {
 
     if (isAllowed && directory) {
       try {
-
-        exec(`echo 'cd ${directory} && npm run build && npm run deploy'`);
+        
+        exec(`cd ${directory} && git pull && npm run build && npm run deploy`);
       } catch (error) {
         console.log(error);
       }
