@@ -5,7 +5,7 @@ import { exec } from 'child_process';
 const SECRET = process.env.GITHUB_WEBHOOK_SECRET;
  
 const GITHUB_REPOSITORIES_TO_DIR = {
-  'dontfrankout/xm_budget': {appDir: '/home/ec2-user/xm_budget', branchToWatch: 'staging'},
+  'dontfrankout/xm_budget': {appDir: '/home/ec2-user/xm_budget', branchToWatch: 'staging', appName: "xm_budget"},
 };
 
 const requestListener = function (req, res) {
@@ -32,7 +32,7 @@ const requestListener = function (req, res) {
 
         console.log("Running Build Commands")
         
-        exec(`cd ${directory.appDir} && touch deploy.yay && git pull && npm run build && npm run deploy`);
+        exec(`cd ${directory.appDir} && git pull && npm run build && npm run deploy >> ~/${directory.appDir}_${directory.branchToWatch}.yay`);
 
         res.writeHead(200);
         res.end("complete?");
