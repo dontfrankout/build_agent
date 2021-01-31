@@ -17,7 +17,7 @@ const requestListener = function (req, res) {
 
     if(!isAllowed) {
       res.writeHead(401);
-      let thisResponse = JSON.stringify({error: `Unauthorized`})
+      let thisResponse = JSON.stringify({error: `Unauthorized`, secret:SECRET})
       res.end(thisResponse)
       return
     }
