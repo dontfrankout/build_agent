@@ -1,7 +1,7 @@
 import http from 'http';
 import crypto from 'crypto';
 import { exec } from 'child_process';
- 
+
 const SECRET = process.env.GITHUB_WEBHOOK_SECRET;
  
 const GITHUB_REPOSITORIES_TO_DIR = {
@@ -32,7 +32,7 @@ const requestListener = function (req, res) {
 
         console.log("Running Build Commands")
         
-        exec(`cd ${directory.appDir} && git pull && npm run build && npm run deploy >> /home/ec2-user/${directory.appDir}_${directory.branchToWatch}.yay`);
+        exec(`cd ${directory.appDir} && git pull && touch ~/pullsucess.yay && npm run-script build && touch ~/build.yay && npm run-script deploy && touch ~/deploy.yay`);
 
         res.writeHead(200);
         res.end("complete?");
