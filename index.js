@@ -29,14 +29,14 @@ const requestListener = function (req, res) {
     const isBranch = hookBranch === `refs/heads/${directory.branchToWatch}`;
 
     if(!isBranch) {
-      res.writeHead(400);
+      res.writeHead(500);
       return
     }
 
     const directory = GITHUB_REPOSITORIES_TO_DIR[body.repository.full_name];
 
     if(!directory) {
-      res.writeHead(404);
+      res.writeHead(500);
       return
     }
   
