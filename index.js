@@ -17,7 +17,7 @@ const requestListener = function (req, res) {
 
     if(!isAllowed) {
       res.writeHead(401);
-      let thisResponse = JSON.stringify({error: `Unauthorized`, secret:SECRET})
+      let thisResponse = JSON.stringify({error: `Unauthorized`, sig:signature, ghsig:req.headers['x-hub-signature']})
       res.end(thisResponse)
       return
     }
