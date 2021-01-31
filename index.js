@@ -20,6 +20,7 @@ const requestListener = function (req, res) {
 
     if(!isAllowed) {
       res.writeHead(401);
+      res.end()
       return
     }
 
@@ -29,14 +30,18 @@ const requestListener = function (req, res) {
     const isBranch = hookBranch === `refs/heads/${directory.branchToWatch}`;
 
     if(!isBranch) {
-      res.writeHead(500);
+      res.writeHead(400);
+      res.end()
+      console.log({error: `build server is watching branch ${directory.branchToWatch}, ignoring ${hookBranch}`})
       return
     }
 
     const directory = GITHUB_REPOSITORIES_TO_DIR[body.repository.full_name];
 
     if(!directory) {
-      res.writeHead(500);
+      res.writeHead(404);
+      res.end()
+      console.log({error: `requested repo ${body.repository.full_name} is not on watch list`})
       return
     }
   
@@ -64,7 +69,6 @@ const requestListener = function (req, res) {
 
     }
   });
-
 }
  
 http
