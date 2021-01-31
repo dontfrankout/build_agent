@@ -20,7 +20,6 @@ const requestListener = function (req, res) {
 
     if(!isAllowed) {
       res.writeHead(401);
-      res.end(JSON.stringify({auth: req.headers['x-hub-signature'], error: 'build agent is rejecting this due to bad signature'}))
       return
     }
 
@@ -31,8 +30,6 @@ const requestListener = function (req, res) {
 
     if(!isBranch) {
       res.writeHead(400);
-      res.end(JSON.stringify({error: `build server is watching branch ${directory.branchToWatch}, ignoring ${hookBranch}`}))
-      console.log({error: `build server is watching branch ${directory.branchToWatch}, ignoring ${hookBranch}`})
       return
     }
 
@@ -40,8 +37,6 @@ const requestListener = function (req, res) {
 
     if(!directory) {
       res.writeHead(404);
-      res.end(JSON.stringify({error: `requested repo ${body.repository.full_name} is not on watch list`}))
-      console.log({error: `requested repo ${body.repository.full_name} is not on watch list`})
       return
     }
   
