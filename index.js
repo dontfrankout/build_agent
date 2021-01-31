@@ -35,7 +35,7 @@ const requestListener = function (req, res) {
         exec(`cd ${directory.appDir} && git pull && touch ~/pullsucess.yay && npm run-script build && touch ~/build.yay && npm run-script deploy && touch ~/deploy.yay`);
 
         res.writeHead(200);
-        res.end("complete?");
+        res.end("OK?");
 
       } catch (error) {
         console.log(error);
@@ -45,8 +45,8 @@ const requestListener = function (req, res) {
       }
     } else {
       console.log("isAllowed", isAllowed, "isBranch", isBranch,"directory", directory)
-      res.writeHead(500);
-      res.end(JSON.stringify([isAllowed, isBranch, directory]));
+      res.writeHead(403);
+      res.end(JSON.stringify({auth: isAllowed, branchMatch: isBranch, directory]));
 
     }
   });
