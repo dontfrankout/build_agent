@@ -2,7 +2,7 @@ import http from 'http';
 import crypto from 'crypto';
 import { exec } from 'child_process';
 
-const SECRET = process.env.GITHUB_WEBHOOK_SECRET;
+const SECRET = process.env.GITHUB_WEBHOOK_SECRET || '';
  
 const GITHUB_REPOSITORIES_TO_DIR = {
   'dontfrankout/xm_budget': {appDir: '/home/ec2-user/xm_budget', branchToWatch: 'staging', appName: "xm_budget"},
@@ -11,37 +11,36 @@ const GITHUB_REPOSITORIES_TO_DIR = {
 const requestListener = function (req, res) {
   req.on('data', chunk => {
     console.log("Processing Request")
-    const signature = `sha1=${crypto
-      .createHmac('sha1', SECRET)
-      .update(chunk)
-      .digest('hex')}`;
 
+    const signature = `sha1=${crypto.createHmac('sha1', SECRET).update(chunk).digest('hex')}`;
     const isAllowed = req.headers['x-hub-signature'] === signature;
 
     if(!isAllowed) {
       res.writeHead(401);
-      res.end()
+      let thisResponse = JSON.stringify({error: `Unauthorized`})
+      res.end(thisResponse)
       return
     }
 
     const body = JSON.parse(chunk);
-
     const hookBranch = body.ref
+
+    const directory = GITHUB_REPOSITORIES_TO_DIR[body.repository.full_name];
+   
+    if(!directory) {
+      res.writeHead(404);
+      let thisResponse = JSON.stringify({error: `This repo is not found on this build agent.`})
+      res.end(thisResponse)
+      return
+    }
+
     const isBranch = hookBranch === `refs/heads/${directory.branchToWatch}`;
 
     if(!isBranch) {
       res.writeHead(400);
-      res.end()
-      console.log({error: `build server is watching branch ${directory.branchToWatch}, ignoring ${hookBranch}`})
-      return
-    }
-
-    const directory = GITHUB_REPOSITORIES_TO_DIR[body.repository.full_name];
-
-    if(!directory) {
-      res.writeHead(404);
-      res.end()
-      console.log({error: `requested repo ${body.repository.full_name} is not on watch list`})
+      let thisResponse = JSON.stringify({error: `build server is watching branch ${directory.branchToWatch}, ignoring ${hookBranch}`})
+      res.end(thisResponse)
+      console.log()
       return
     }
   
