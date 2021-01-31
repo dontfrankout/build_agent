@@ -32,7 +32,7 @@ const requestListener = function (req, res) {
 
         console.log("Running Build Commands")
         
-        exec(`cd ${directory.appDir} && git pull && npm run build && npm run deploy >> ~/${directory.appDir}_${directory.branchToWatch}.yay`);
+        exec(`cd ${directory.appDir} && git pull && npm run build && npm run deploy >> /home/ec2-user/${directory.appDir}_${directory.branchToWatch}.yay`);
 
         res.writeHead(200);
         res.end("complete?");
