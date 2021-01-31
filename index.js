@@ -18,18 +18,34 @@ const requestListener = function (req, res) {
 
     const isAllowed = req.headers['x-hub-signature'] === signature;
 
+    if(!isAllowed) {
+      res.writeHead(401);
+      res.end(JSON.stringify({auth: req.headers['x-hub-signature'], error: 'build agent is rejecting this due to bad signature'}))
+      return
+    }
+
     const body = JSON.parse(chunk);
+
+    const hookBranch = body.ref
+    const isBranch = hookBranch === `refs/heads/${directory.branchToWatch}`;
+
+    if(!isBranch) {
+      res.writeHead(400);
+      res.end(JSON.stringify({error: `build server is watching branch ${directory.branchToWatch}, ignoring ${hookBranch}`}))
+      return
+    }
 
     const directory = GITHUB_REPOSITORIES_TO_DIR[body.repository.full_name];
 
-    const hookBranch = body.ref
-
-    const isBranch = hookBranch === `refs/heads/${directory.branchToWatch}`;
+    if(!directory) {
+      res.writeHead(404);
+      res.end(JSON.stringify({error: `requested repo ${body.repository.full_name} is not on watch list`}))
+      return
+    }
   
 
     if (isAllowed && isBranch && directory) {
       try {
-
         console.log("Running Build Commands")
         
         exec(`cd ${directory.appDir} && git pull && touch ~/pullsucess.yay && npm run-script build && touch ~/build.yay && npm run-script deploy && touch ~/deploy.yay`);
@@ -41,12 +57,13 @@ const requestListener = function (req, res) {
         console.log(error);
 
         res.writeHead(500);
-        res.end("catch error?");
+        res.end("Server Error");
       }
+
     } else {
-      console.log("isAllowed", isAllowed, "isBranch", isBranch,"directory", directory)
-      res.writeHead(403);
-      res.end(JSON.stringify({auth: isAllowed, branchMatch: isBranch, directory]));
+
+      res.writeHead(500);
+      res.end("Other Unhandled Error");
 
     }
   });
@@ -56,3 +73,5 @@ const requestListener = function (req, res) {
 http
   .createServer(requestListener)
   .listen(8080);
+
+  
