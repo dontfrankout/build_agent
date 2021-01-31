@@ -46,7 +46,7 @@ const requestListener = function (req, res) {
     } else {
       console.log("isAllowed", isAllowed, "isBranch", isBranch,"directory", directory)
       res.writeHead(500);
-      res.end("non match?");
+      res.end(JSON.stringify([isAllowed, isBranch, directory]));
 
     }
   });
