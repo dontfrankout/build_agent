@@ -6,7 +6,7 @@ const SECRET = process.env.GITHUB_WEBHOOK_SECRET || '';
  
 const GITHUB_REPOSITORIES_TO_DIR = {
   'dontfrankout/xm_budget': {appDir: '/home/ec2-user/xm_budget', branchToWatch: 'staging', appName: "xm_budget"},
-  'dontfrankout/xm_react_template': {appDir: '/home/ec2-user/xm_react_template', branchToWatch: 'staging', appName: "xm_demo"},
+  'dontfrankout/xm_react_template': {appDir: '/home/ec2-user/xm_react_template', branchToWatch: 'main', appName: "xm_demo"},
 
 };
 
