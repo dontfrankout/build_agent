@@ -51,7 +51,7 @@ const requestListener = function (req, res) {
       try {
         console.log("Running Build Commands")
         
-        exec(`cd ${directory.appDir} && git pull && touch ~/${directory.appName}_pull.yay && npm run-script build && touch ~/${directory.appName}_build.yay && npm run-script deploy && touch ~/${directory.appName}_deploy.yay`);
+        exec(`cd ${directory.appDir} && git pull && touch ~/${directory.appName}_A_Pull && npm run-script build && touch ~/${directory.appName}_B_Build && npm run-script deploy && touch ~/${directory.appName}_C_deploy`);
 
         res.writeHead(200);
         res.end("OK?");
