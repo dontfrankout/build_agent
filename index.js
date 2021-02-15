@@ -6,6 +6,8 @@ const SECRET = process.env.GITHUB_WEBHOOK_SECRET || '';
  
 const GITHUB_REPOSITORIES_TO_DIR = {
   'dontfrankout/xm_budget': {appDir: '/home/ec2-user/xm_budget', branchToWatch: 'staging', appName: "xm_budget"},
+  'dontfrankout/xm_react_template': {appDir: '/home/ec2-user/xm_react_template', branchToWatch: 'staging', appName: "xm_demo"},
+
 };
 
 const requestListener = function (req, res) {
@@ -49,7 +51,7 @@ const requestListener = function (req, res) {
       try {
         console.log("Running Build Commands")
         
-        exec(`cd ${directory.appDir} && git pull && touch ~/pullsucess.yay && npm run-script build && touch ~/build.yay && npm run-script deploy && touch ~/deploy.yay`);
+        exec(`cd ${directory.appDir} && git pull && touch ~/${directory.appName}_pull.yay && npm run-script build && touch ~/${directory.appName}_build.yay && npm run-script deploy && touch ~/${directory.appName}_deploy.yay`);
 
         res.writeHead(200);
         res.end("OK?");
